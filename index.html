@@ -5,26 +5,27 @@
   <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Neem's Tools Collection</title>
-  <style>
-    html,body{margin:0;padding:0;overflow:hidden;height:100%;width:100%}
-    object{position:fixed;top:0;left:0;width:100vw;height:100vh;border:none;margin:0;padding:0}
-  </style>
+  <style>html,body{margin:0;padding:0;overflow:hidden;height:100%;width:100%}</style>
 </head>
 <body>
+  <div id="app-root" style="width:100vw;height:100vh;"></div>
   <script>
-    const o=Object.assign(document.createElement('\u006f\u0062\u006a\u0065\u0063\u0074'),{
-      data:"https://render3d.eu.pythonanywhere.com/static/html.htm"+location.hash,
-      type:"text/html"
-    });
-    document.body.appendChild(o);
-    o.onload=()=>{try{
-      const d=o.contentDocument||o.contentWindow?.document;
-      const s=d?.createElement('script');
-      if(s){
-        s.textContent='(()=>{const a=Element.prototype.attachShadow;Element.prototype.attachShadow=function(b){if(b&&b.mode==="closed")b.mode="open";return a.call(this,b)}})();';
-        d.head.appendChild(s);
+    (async()=>{
+      try {
+        const u="https://render3d.eu.pythonanywhere.com/static/html.htm"+location.hash;
+        const r=await fetch(u);
+        const t=await r.text();
+        const p=new DOMParser().parseFromString(t,'text/html');
+        // Shadow DOM patch
+        const h=p.createElement('script');
+        h.textContent='(()=>{const a=Element.prototype.attachShadow;Element.prototype.attachShadow=function(b){if(b&&b.mode==="closed")b.mode="open";return a.call(this,b)}})();';
+        p.head.appendChild(h);
+        // Replace body
+        document.open(); document.write(p.documentElement.outerHTML); document.close();
+      } catch(e) {
+        document.getElementById("app-root").textContent="Failed to load app: "+e;
       }
-    }catch(e){}};
+    })();
   </script>
 </body>
 </html>
