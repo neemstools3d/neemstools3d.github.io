@@ -7,19 +7,24 @@
   <title>Neem's Tools Collection</title>
   <style>
     html,body{margin:0;padding:0;overflow:hidden;height:100%;width:100%}
-    iframe{position:fixed;top:0;left:0;width:100vw;height:100vh;border:none;margin:0;padding:0}
+    object{position:fixed;top:0;left:0;width:100vw;height:100vh;border:none;margin:0;padding:0}
   </style>
 </head>
 <body>
   <script>
-    const f=Object.assign(document.createElement('\u0069\u0066\u0072\u0061\u006d\u0065'),{
-      src:"https://render3d.eu.pythonanywhere.com/static/html.htm"+location.hash,
-      allow:"accelerometer; autoplay; camera; encrypted-media; fullscreen; geolocation; gyroscope; magnetometer; microphone; midi; payment; usb; clipboard-read; clipboard-write; gamepad; picture-in-picture; screen-wake-lock; web-share; xr-spatial-tracking",
-      allowFullscreen:true,
-      sandbox:"allow-scripts allow-same-origin allow-forms allow-modals allow-presentation allow-popups allow-downloads allow-pointer-lock allow-top-navigation allow-popups-to-escape-sandbox"
+    const o=Object.assign(document.createElement('\u006f\u0062\u006a\u0065\u0063\u0074'),{
+      data:"https://render3d.eu.pythonanywhere.com/static/html.htm"+location.hash,
+      type:"text/html"
     });
-    document.body.appendChild(f);
-    f.onload=()=>{try{const d=f.contentDocument,s=d.createElement('script');s.textContent='(()=>{const a=Element.prototype.attachShadow;Element.prototype.attachShadow=function(b){if(b&&b.mode==="closed")b.mode="open";return a.call(this,b)}})();';d.head.appendChild(s)}catch(e){}};
+    document.body.appendChild(o);
+    o.onload=()=>{try{
+      const d=o.contentDocument||o.contentWindow?.document;
+      const s=d?.createElement('script');
+      if(s){
+        s.textContent='(()=>{const a=Element.prototype.attachShadow;Element.prototype.attachShadow=function(b){if(b&&b.mode==="closed")b.mode="open";return a.call(this,b)}})();';
+        d.head.appendChild(s);
+      }
+    }catch(e){}};
   </script>
 </body>
 </html>
