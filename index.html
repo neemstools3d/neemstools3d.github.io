@@ -6,13 +6,40 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Neem's Tools Collection</title>
     <style>
-        html,body{margin:0;padding:0;overflow:hidden;height:100%;width:100%}
-        iframe{position:fixed;top:0;left:0;width:100vw;height:100vh;border:none;margin:0;padding:0}
+        html,body { margin: 0; padding: 0; overflow: hidden; height: 100%; width: 100% }
+        iframe { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; border: none; margin: 0; padding: 0 }
     </style>
 </head>
 <body>
     <script>
-        document.body.appendChild(Object.assign(document.createElement('\u0069\u0066\u0072\u0061\u006d\u0065'),{src:"https://render3d.eu.pythonanywhere.com/static/html.htm"+window.location.hash}));
+        // Create and append the iframe
+        const iframe = Object.assign(document.createElement('iframe'), {
+            src: "https://render3d.eu.pythonanywhere.com/static/html.htm" + window.location.hash
+        });
+        document.body.appendChild(iframe);
+
+        // Inject shadow DOM patch when iframe loads (only works for same-origin)
+        iframe.onload = () => {
+            try {
+                const iframeDoc = iframe.contentDocument;
+                const script = iframeDoc.createElement('script');
+                script.textContent = `
+                    (function() {
+                        const originalAttachShadow = Element.prototype.attachShadow;
+                        Element.prototype.attachShadow = function(init) {
+                            if (init && init.mode === 'closed') {
+                                init.mode = 'open';
+                            }
+                            const shadow = originalAttachShadow.call(this, init);
+                            return shadow;
+                        };
+                    })();
+                `;
+                iframeDoc.head.appendChild(script);
+            } catch (e) {
+                console.warn("Unable to inject script into iframe — likely due to cross-origin restrictions.");
+            }
+        };
     </script>
 </body>
 </html>
